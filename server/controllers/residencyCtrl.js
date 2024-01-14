@@ -8,8 +8,19 @@ export const createResidency = asyncHandler(async(req, res) => {
     try{
         const residency = await prisma.residency.create({
             data: {
-                title, description, price, address, country, city, facilities, image, userEmail,
+                title, 
+                description, 
+                price, 
+                address, 
+                country, 
+                city, 
+                facilities, 
+                image, 
+                owner : {connect : {email: userEmail}},
             }
+        });
+        res.send({
+            message: "residency created successfully", residency
         })
     }
     catch(err){
@@ -18,4 +29,12 @@ export const createResidency = asyncHandler(async(req, res) => {
         }
         throw new Error(err.message)
     }
+});
+export const getAllResidencies = asyncHandler(async(req, res) => {
+    const residencies = await prisma.residency.findMany({
+        orderBy: {
+            createdAt: "desc"
+        }
+    })
+    res.send(residencies)
 })

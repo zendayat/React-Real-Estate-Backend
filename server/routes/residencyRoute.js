@@ -1,7 +1,9 @@
 import express from 'express';
-import { createResidency } from '../controllers/residencyCtrl.js';
+import { createResidency, getAllResidencies } from '../controllers/residencyCtrl.js';
 
 const router = express.Router();
 router.post("/create", createResidency)
+router.get("/allresd", getAllResidencies)
+router.get("/:id", getResidency)
 
 export {router as residencyRoute}
