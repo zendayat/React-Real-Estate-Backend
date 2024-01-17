@@ -32,7 +32,7 @@ export const bookVisit = asyncHandler(async(req, res)=>{
         })
         if(alreadyBooked.bookedVisits.some((visit)=> visit.id === id)){
             res.status(400).json({
-                message: "Thi residence is already booked by you"
+                message: "This residence is already booked by you"
             })
         }
         else{
@@ -90,6 +90,45 @@ export const cancelBooking = asyncHandler(async(req, res)=>{
             })
 
             res.send("Booking cancelled succesfully")
+        }
+    }
+    catch(err){
+        throw new Error(err.message);
+    }
+})
+
+
+// function to add residence to favourites
+export const toFav = asyncHandler(async(req, res)=>{
+    const {email} = req.body;
+    const {rid} = req.params;
+
+    try{
+        const user = await prisma.user.findUnique({
+            where: {email}
+
+        })
+        if (user.favResidenciesID.includes(rid)){
+            const updateUser =  await prisma.user.update({
+                where: {email},
+                data: {
+                    favResidenciesID:{
+                        set: user.favResidenciesID.filter((id)=> id !== rid)
+                    }
+                }
+            })
+            res.send({message: "removed from favourites", user: updateUser})
+        }
+        else{
+            const updateUser = await prisma.user.update({
+                where: {email},
+                data: {
+                    favResidenciesID: {
+                        push: rid
+                    }
+                }
+            })
+            res.send({message: "updated favourites", user: updateUser})
         }
     }
     catch(err){
