@@ -32,7 +32,7 @@ export const createResidency = asyncHandler(async(req, res) => {
 });
 
 // to get all ressidencies
-export const getAllResidencies = asyncHandler(async(req, res) => {
+export const getResidency = asyncHandler(async(req, res) => {
     const {id} = req.params; 
     try{
         const residency = await prisma.residency.findUnique({
@@ -46,7 +46,7 @@ export const getAllResidencies = asyncHandler(async(req, res) => {
 })
 
 // to get specific residencies
-export const getResidency = asyncHandler(async(req, res) => {
+export const getAllResidencies = asyncHandler(async(req, res) => {
     const residencies = await prisma.residency.findMany({
         orderBy: {
             createdAt: "desc"
